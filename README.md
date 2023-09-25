@@ -43,3 +43,56 @@ WHERE
         WHERE color = 'y'
     )
 ```
+
+### [Exercises №24](https://www.sql-ex.ru/learn_exercises.php?LN=24)
+```
+SELECT maker
+FROM product 
+WHERE model IN (
+               SELECT DISTINCT model
+               FROM PC
+               WHERE speed >=750
+              )
+INTERSECT
+SELECT maker
+FROM product 
+WHERE model IN (
+               SELECT DISTINCT model
+               FROM Laptop
+               WHERE speed >=750)
+
+```
+
+### [Exercises №25](https://www.sql-ex.ru/learn_exercises.php?LN=25)
+```
+WITH PC_Makers as (
+  SELECT a.maker, b.code, b.model, b.speed, b.ram, b.hd, b.cd, b.price
+  FROM product as a
+  JOIN PC as b ON a.model=b.model 
+  WHERE a.type = 'PC' --приклеили производиля к PC 
+  )
+
+SELECT DISTINCT maker
+FROM PC_Makers
+WHERE ram IN (
+               SELECT min (ram)
+               FROM PC -- определили мин значение ram
+               ) AND 
+      speed IN (
+               SELECT max(speed)
+               FROM (
+                     SELECT speed
+                     FROM PC
+                     WHERE ram IN (
+                                   SELECT min (ram)
+                                   FROM PC
+                                   )
+                     ) as t1 -- определили максимальное значение скорости = 500 
+               ) AND
+      maker IN (
+                SELECT DISTINCT maker
+                FROM product
+                WHERE type = 'printer'
+                )
+```
+
