@@ -323,6 +323,23 @@ group by country
 having count(*) = count(result)
 ```
 
+### [Exercises №49](https://www.sql-ex.ru/learn_exercises.php?LN=49)
+```
+with t1 as (
+Select distinct ship as name, ship as class
+from outcomes
+where ship not in (select name from ships)
+union
+Select distinct name, class
+from ships
+) -- справочник всех кораблей
+
+select t1.name
+from t1
+join classes as c on t1.class = c.class
+where c.bore = 16.0
+```
+
 ### [Exercises №51](https://www.sql-ex.ru/learn_exercises.php?LN=51)
 ```
 with all_ships as (
@@ -341,6 +358,18 @@ join classes ON all_ships.class = classes.class
 
 select name from all_ships1
 where numGuns = max_guns
+```
+
+### [Exercises №52](https://www.sql-ex.ru/learn_exercises.php?LN=52)
+```
+SELECT DISTINCT S.name
+FROM Ships S
+JOIN Classes C ON S.class = C.class
+WHERE (C.country = 'Japan' OR C.country IS NULL)
+  AND (C.type = 'bb' OR C.type IS NULL)
+  AND (C.numGuns >= 9 OR C.numGuns IS NULL)
+  AND (C.bore < 19 OR C.bore IS NULL)
+  AND (C.displacement <= 65000 OR C.displacement IS NULL)
 ```
 
 ### [Exercises №58](https://www.sql-ex.ru/learn_exercises.php?LN=58)
@@ -389,6 +418,13 @@ group by class
 having count(name) >=3 AND count(result) >0
 ```
 
+### [Exercises №61](https://www.sql-ex.ru/learn_exercises.php?LN=61)
+```
+SELECT coalesce(sum(coalesce(inc,0)),0)-
+(SELECT coalesce(sum(coalesce(out,0)),0) FROM Outcome_o)
+FROM Income_o
+```
+
 ### [Exercises №65](https://www.sql-ex.ru/learn_exercises.php?LN=65)
 ```
 with t1 as (
@@ -425,6 +461,26 @@ from (select point, date, sum(inc) as inc from t1 group by point, date) as t3
 order by point, date
 ```
 
+### [Exercises №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
+```
+with i as (
+select code, point, date, inc,
+       ROW_NUMBER() OVER (partition by date order by code) as rn
+from Income
+),
+
+o as (
+select code, point, date, out,
+       ROW_NUMBER() OVER (partition by date order by code) as rn
+from Outcome
+)
+
+select coalesce(i.date,o.date),  coalesce(i.rn, o.rn),
+       i.point, i.inc, o.point, o.out
+from i
+full join o on i.date = o.date AND i.rn = o.rn
+```
+
 ### [Exercises №101](https://www.sql-ex.ru/learn_exercises.php?LN=101)
 ```
 with t1 as (
@@ -456,4 +512,19 @@ select code, model, color, type, price,
        max(model) over (partition by t2.group_num) as max_model,
        distinct_types_cou, avg_price
 from t2 join t3 on t2.group_num = t3.group_num
+```
+
+
+### [Exercises №1 (DML](https://www.sql-ex.ru/dmlexercises.php?N=1)
+```
+INSERT INTO PC 
+VALUES (20, 2111, 950,512,60,'52x', 1100);
+```
+
+### [Exercises №2 (DML](https://www.sql-ex.ru/dmlexercises.php?N=2)
+```
+INSERT INTO Product 
+VALUES ('Z', 4003, 'Printer'),
+('Z', 4001, 'PC'),
+('Z', 4002, 'Laptop')
 ```
