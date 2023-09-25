@@ -202,5 +202,65 @@ from (
      ) as t1
 group by class
 having count(name) = 1
+```
 
+### [Exercises №39](https://www.sql-ex.ru/learn_exercises.php?LN=39)
+```
+select distinct ship
+from (
+     select a.ship, a.result, b.date,
+            max(date) over (partition by ship) as max_date
+     from outcomes as a
+     join Battles as b on a.battle=b.name
+     ) as all_data
+where date < max_date AND
+      result='damaged'
+```
+
+### [Exercises №40](https://www.sql-ex.ru/learn_exercises.php?LN=40)
+```
+SELECT maker,  max(type) type
+FROM product
+GROUP BY maker
+HAVING count(distinct type)=1 AND count(model)>  1
+```
+
+### [Exercises №41](https://www.sql-ex.ru/learn_exercises.php?LN=41)
+```
+with all_models as (
+select model, price from PC
+UNION
+select model, price from Laptop
+UNION                
+select model, price from Printer
+)
+
+select b.maker, 
+       case when count(a.model) = count(a.price) then max(a.price)
+            else NULL
+       End as max_price
+from all_models as a
+join product as b ON a.model = b.model
+group by b.maker
+```
+
+### [Exercises №43](https://www.sql-ex.ru/learn_exercises.php?LN=43)
+```
+Select distinct name 
+from battles
+where year(date) NOT IN (
+                        select launched from ships WHERE launched IS NOT NULL
+                        ) OR
+      year(date) IS NULL
+```
+
+### [Exercises №44](https://www.sql-ex.ru/learn_exercises.php?LN=43)
+```
+Select distinct name
+from ships
+where substring(name,1,1)='R'
+union
+Select distinct ship
+from outcomes
+where substring(ship,1,1)='R'
 ```
