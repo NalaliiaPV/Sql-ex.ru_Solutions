@@ -264,3 +264,108 @@ Select distinct ship
 from outcomes
 where substring(ship,1,1)='R'
 ```
+
+### [Exercises №45](https://www.sql-ex.ru/learn_exercises.php?LN=45)
+```
+SELECT name
+FROM Ships
+WHERE name LIKE '% % %'
+UNION
+SELECT ship
+FROM Outcomes
+WHERE ship LIKE '% % %'
+```
+
+### [Exercises №46](https://www.sql-ex.ru/learn_exercises.php?LN=46)
+```
+with all_ships as (
+select name, class from ships
+union 
+select ship, ship from outcomes
+where ship IN (select class from ships)
+)
+
+select distinct outcomes.ship, classes.displacement, classes.numGuns
+from outcomes
+left join all_ships ON outcomes.ship  = all_ships.name
+left join classes ON classes.class = all_ships.class
+where outcomes.battle = 'Guadalcanal'
+```
+
+### [Exercises №47](https://www.sql-ex.ru/learn_exercises.php?LN=47)
+```
+with all_ships as( 
+Select name, class from ships
+union
+select ship as name, ship as class from outcomes
+where ship IN (select class from classes)
+),
+
+all_ships_countries as (
+select classes.country, all_ships.name
+from all_ships 
+join classes on classes.class = all_ships.class
+), --полный справочник: страна - корабль
+
+sunk_list as (
+select * from outcomes 
+where result = 'sunk'), --нашли 6 потопленных
+
+all_ships_countries_sunk as (
+select a.country, a.name, b.result
+from all_ships_countries as a
+left join sunk_list as b on b.ship = a.name
+)
+
+select country 
+from all_ships_countries_sunk 
+group by country
+having count(*) = count(result)
+```
+
+### [Exercises №51](https://www.sql-ex.ru/learn_exercises.php?LN=51)
+```
+with all_ships as (
+select name, class from ships
+union
+select ship as name, ship as class from outcomes
+where ship IN (select class from classes)
+), --полный справочник кораблей
+
+all_ships1 as (
+select all_ships.name, classes.displacement, classes.numGuns,
+       max(classes.numGuns) over (partition by classes.displacement) as max_guns 
+from all_ships
+join classes ON all_ships.class = classes.class
+)
+
+select name from all_ships1
+where numGuns = max_guns
+```
+
+### [Exercises №58](https://www.sql-ex.ru/learn_exercises.php?LN=58)
+```
+with t1 as (
+select maker, type, count(model) as models_in_type
+from product
+group by maker, type
+),
+
+t2 as (
+select distinct product.maker, t3.type from product
+cross join (select distinct type from product) as t3
+),
+
+t4 as (
+select maker, count(model) as models_in_maker
+from product
+group by maker
+) 
+
+--скрестить t4 & t2 & t1
+select t2.maker, t2.type, --coalesce(t1.models_in_type, 0) as models_in_type, 
+       CAST(COALESCE(t1.models_in_type, 0) * 100.00 / t4.models_in_maker AS DECIMAL(10, 2)) AS prc
+from t2
+left join t4 on t2.maker = t4.maker 
+left join t1 on t2.maker = t1.maker AND t2.type = t1.type
+```
