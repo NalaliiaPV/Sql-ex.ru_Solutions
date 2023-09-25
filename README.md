@@ -96,3 +96,31 @@ WHERE ram IN (
                 )
 ```
 
+### [Exercises №26](https://www.sql-ex.ru/learn_exercises.php?LN=26)
+```
+SELECT avg(price) avg_price
+FROM (
+    SELECT model, price from pc  
+    union all
+    SELECT model, price from Laptop  
+    ) as etc
+INNER JOIN Product ON etc.model = product.model
+WHERE maker = 'A'  
+```
+
+### [Exercises №27](https://www.sql-ex.ru/learn_exercises.php?LN=27)
+```
+SELECT DISTINCT a.maker, avg(b.hd)
+FROM product as a
+JOIN PC as b ON b.model = a.model
+WHERE maker IN (
+        SELECT DISTINCT maker from product
+        WHERE type = 'PC'
+        INTERSECT 
+        SELECT DISTINCT maker from product
+        WHERE type = 'printer'
+        ) AND --определили список производителей и моделей
+     type = 'PC' --вычленили только ПК
+GROUP BY a.maker
+ 
+```
