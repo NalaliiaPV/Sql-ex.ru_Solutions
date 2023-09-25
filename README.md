@@ -369,3 +369,91 @@ from t2
 left join t4 on t2.maker = t4.maker 
 left join t1 on t2.maker = t1.maker AND t2.type = t1.type
 ```
+
+### [Exercises №57](https://www.sql-ex.ru/learn_exercises.php?LN=57)
+```
+with t1 as (
+SELECT class, name, result
+FROM (Select name, class from ships
+      union
+      select ship as name, ship as clacc from outcomes
+      where ship in (select class from classes) 
+      ) Q --полная база кораблей и классов
+LEFT JOIN Outcomes 
+ON ship=name  AND result = 'sunk' --приджоинили результат, если он sunk
+)
+
+select class, count(result) 
+from t1
+group by class
+having count(name) >=3 AND count(result) >0
+```
+
+### [Exercises №65](https://www.sql-ex.ru/learn_exercises.php?LN=65)
+```
+with t1 as (
+Select distinct maker, type,
+       case when type = 'PC' then 1
+            when type = 'Laptop' then 2
+            when type = 'Printer' then 3
+            else 0
+       end as type_sort
+from product
+)
+
+select ROW_NUMBER() OVER (order by maker, type_sort) as num, 
+       case WHEN LAG(maker) OVER (ORDER BY maker) = maker THEN ''
+	        ELSE maker
+       end as maker,
+       type
+from t1
+```
+
+### [Exercises №69](https://www.sql-ex.ru/learn_exercises.php?LN=69)
+```
+with t1 as (
+select point, date, inc from income
+union all
+select point, date, -out from outcome
+)
+
+select point, CONVERT(VARCHAR, date, 103), 
+       sum(inc) over (partition by point order by date
+	                  rows between unbounded preceding and current row
+                     ) as cumulative_dif
+from (select point, date, sum(inc) as inc from t1 group by point, date) as t3
+order by point, date
+```
+
+### [Exercises №101](https://www.sql-ex.ru/learn_exercises.php?LN=101)
+```
+with t1 as (
+Select code, model, color, type, price,
+       case when code = 1 then 1 
+            when color = 'n' then 1
+            else 0
+       end as new_group_sign
+from printer
+),
+
+t2 as (
+select code, model, color, type, price,
+       sum(new_group_sign) over (order by code
+		  rows between unbounded preceding
+		  and current row
+		  ) as group_num
+from t1
+),
+
+t3 as (
+select group_num, count(distinct type) as distinct_types_cou,
+       avg(price) as avg_price
+from t2
+group by group_num
+)
+
+select code, model, color, type, price, 
+       max(model) over (partition by t2.group_num) as max_model,
+       distinct_types_cou, avg_price
+from t2 join t3 on t2.group_num = t3.group_num
+```
