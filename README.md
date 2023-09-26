@@ -425,6 +425,23 @@ SELECT coalesce(sum(coalesce(inc,0)),0)-
 FROM Income_o
 ```
 
+### [Exercise №64](https://www.sql-ex.ru/learn_exercises.php?LN=64)
+```
+WITH t as (
+SELECT point, date, inc, 0 AS out FROM Income
+UNION ALL
+SELECT point, date, 0, out FROM Outcome
+)
+
+SELECT t.point, t.date, 
+       CASE WHEN SUM(t.inc) > 0 THEN 'inc' ELSE 'out' END, 
+       CASE WHEN SUM(t.inc) > 0 THEN SUM(t.inc) ELSE SUM(t.out) END 
+FROM t 
+GROUP BY t.point, t.date 
+HAVING SUM(t.inc) = 0 OR 
+       SUM(t.out) = 0
+```
+
 ### [Exercise №65](https://www.sql-ex.ru/learn_exercises.php?LN=65)
 ```
 WITH t1 as (
