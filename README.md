@@ -372,6 +372,32 @@ WHERE (C.country = 'Japan' OR C.country IS NULL)
   AND (C.displacement <= 65000 OR C.displacement IS NULL)
 ```
 
+### [Exercise №53](https://www.sql-ex.ru/learn_exercises.php?LN=53)
+```
+SELECT ROUND(AVG(numGuns), 2)
+FROM classes
+WHERE type = 'bb';
+```
+
+### [Exercise №57](https://www.sql-ex.ru/learn_exercises.php?LN=57)
+```
+WITH t1 as (
+SELECT class, name, result
+FROM (SELECT name, class FROM ships
+      UNION
+      SELECT ship as name, ship as clacc FROM outcomes
+      WHERE ship in (SELECT class FROM classes) 
+      ) Q --полная база кораблей и классов
+LEFT JOIN Outcomes 
+ON ship=name  AND result = 'sunk' --приджоинили результат, если он sunk
+)
+
+SELECT class, count(result) 
+FROM t1
+GROUP BY class
+HAVING count(name) >=3 AND count(result) >0
+```
+
 ### [Exercise №58](https://www.sql-ex.ru/learn_exercises.php?LN=58)
 ```
 WITH t1 as (
@@ -397,25 +423,6 @@ SELECT t2.maker, t2.type, --coalesce(t1.models_in_type, 0) as models_in_type,
 FROM t2
 LEFT JOIN t4 ON t2.maker = t4.maker 
 LEFT JOIN t1 ON t2.maker = t1.maker AND t2.type = t1.type
-```
-
-### [Exercise №57](https://www.sql-ex.ru/learn_exercises.php?LN=57)
-```
-WITH t1 as (
-SELECT class, name, result
-FROM (SELECT name, class FROM ships
-      UNION
-      SELECT ship as name, ship as clacc FROM outcomes
-      WHERE ship in (SELECT class FROM classes) 
-      ) Q --полная база кораблей и классов
-LEFT JOIN Outcomes 
-ON ship=name  AND result = 'sunk' --приджоинили результат, если он sunk
-)
-
-SELECT class, count(result) 
-FROM t1
-GROUP BY class
-HAVING count(name) >=3 AND count(result) >0
 ```
 
 ### [Exercise №61](https://www.sql-ex.ru/learn_exercises.php?LN=61)
