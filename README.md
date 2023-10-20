@@ -44,7 +44,7 @@ WHERE
     )
 ```
 
-### [Exercise №24](https://www.sql-ex.ru/learn_exercises.php?LN=24)
+### [Exercise №23](https://www.sql-ex.ru/learn_exercises.php?LN=23)
 ```
 SELECT maker
 FROM product 
@@ -60,6 +60,27 @@ WHERE model IN (
                SELECT DISTINCT model
                FROM Laptop
                WHERE speed >=750)
+```
+
+### [Exercise №24](https://www.sql-ex.ru/learn_exercises.php?LN=24)
+```
+WITH all_products AS (
+    SELECT model, price
+    FROM PC
+    UNION
+    SELECT model, price
+    FROM Laptop
+    UNION
+    SELECT model, price
+    FROM Printer
+)
+
+SELECT model
+FROM all_products
+WHERE price = (
+    SELECT MAX(price)
+    FROM all_products
+);
 
 ```
 
