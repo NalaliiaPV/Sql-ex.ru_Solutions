@@ -361,6 +361,14 @@ JOIN classes as c ON t1.class = c.class
 WHERE c.bore = 16.0
 ```
 
+### [Exercise №50](https://www.sql-ex.ru/learn_exercises.php?LN=50)
+```
+SELECT DISTINCT o.battle
+FROM Outcomes o
+JOIN Ships s ON o.ship = s.name
+WHERE s.class = 'Kongo'
+```
+
 ### [Exercise №51](https://www.sql-ex.ru/learn_exercises.php?LN=51)
 ```
 WITH all_ships as (
