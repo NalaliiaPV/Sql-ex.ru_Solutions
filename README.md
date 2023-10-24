@@ -468,6 +468,21 @@ FROM t1
 GROUP BY point
 ```
 
+### [Exercise №60](https://www.sql-ex.ru/learn_exercises.php?LN=60)
+```
+WITH t1 AS (
+  SELECT point, date, inc 
+  FROM Income_o
+  UNION
+  SELECT point, date, -out 
+  FROM Outcome_o
+)
+SELECT point, SUM(inc) AS total_income
+FROM t1
+WHERE date < '2001-04-15'
+GROUP BY point
+```
+
 ### [Exercise №61](https://www.sql-ex.ru/learn_exercises.php?LN=61)
 ```
 SELECT coalesce(sum(coalesce(inc,0)),0)-
