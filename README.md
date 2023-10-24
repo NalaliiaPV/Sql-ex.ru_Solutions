@@ -490,6 +490,34 @@ SELECT coalesce(sum(coalesce(inc,0)),0)-
 FROM Income_o
 ```
 
+### [Exercise №62](https://www.sql-ex.ru/learn_exercises.php?LN=62)
+```
+WITH t1 AS (
+  SELECT point, date, inc AS money
+  FROM Income_o
+  UNION
+  SELECT point, date, -out AS money
+  FROM Outcome_o
+  ORDER BY point, date
+)
+
+SELECT SUM(money)
+FROM t1
+WHERE date < '2001-04-15 00:00:00'
+```
+
+### [Exercise №63](https://www.sql-ex.ru/learn_exercises.php?LN=63)
+```
+SELECT p.name
+FROM Passenger p
+WHERE p.id_psg IN (
+  SELECT pit.id_psg
+  FROM Pass_in_trip pit
+  GROUP BY pit.id_psg, pit.place
+  HAVING COUNT(pit.place) >= 2
+)
+```
+
 ### [Exercise №64](https://www.sql-ex.ru/learn_exercises.php?LN=64)
 ```
 WITH t as (
