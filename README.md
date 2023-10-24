@@ -454,6 +454,20 @@ LEFT JOIN t4 ON t2.maker = t4.maker
 LEFT JOIN t1 ON t2.maker = t1.maker AND t2.type = t1.type
 ```
 
+### [Exercise №59](https://www.sql-ex.ru/learn_exercises.php?LN=59)
+```
+WITH t1 AS (
+  SELECT point, date, inc 
+  FROM Income_o
+  UNION
+  SELECT point, date, -out 
+  FROM Outcome_o
+)
+SELECT point, SUM(inc) AS total_inc
+FROM t1
+GROUP BY point
+```
+
 ### [Exercise №61](https://www.sql-ex.ru/learn_exercises.php?LN=61)
 ```
 SELECT coalesce(sum(coalesce(inc,0)),0)-
