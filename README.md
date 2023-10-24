@@ -555,6 +555,33 @@ SELECT ROW_NUMBER() OVER (ORDER BY maker, type_sort) as num,
 FROM t1
 ```
 
+### [Exercise №66](https://www.sql-ex.ru/learn_exercises.php?LN=66)
+```
+WITH RECURSIVE DateList AS (
+  SELECT TIMESTAMP '2003-04-01 00:00:00' AS date
+  UNION ALL
+  SELECT date + INTERVAL '1' DAY
+  FROM DateList
+  WHERE date < '2003-04-07 00:00:00'
+),
+
+t1 AS (
+  SELECT date, COUNT(DISTINCT trip_no) AS count
+  FROM Pass_in_trip
+  WHERE date BETWEEN '2003-04-01' AND '2003-04-07'
+    AND trip_no IN (
+      SELECT trip_no
+      FROM Trip
+      WHERE town_from = 'Rostov'
+    )
+  GROUP BY date
+)
+
+SELECT d.date, COALESCE(p.count, 0)
+FROM DateList AS d
+LEFT JOIN t1 AS p ON d.date = p.date
+```
+
 ### [Exercise №69](https://www.sql-ex.ru/learn_exercises.php?LN=69)
 ```
 WITH t1 as (
