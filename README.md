@@ -582,6 +582,22 @@ FROM DateList AS d
 LEFT JOIN t1 AS p ON d.date = p.date
 ```
 
+### [Exercise №67](https://www.sql-ex.ru/learn_exercises.php?LN=67)
+```
+WITH t1 AS (
+  SELECT town_from, town_to, COUNT(*) as count
+  FROM Trip
+  GROUP BY town_from, town_to
+)
+
+SELECT COUNT(count)
+FROM t1 
+WHERE count IN (
+  SELECT MAX(count) 
+  FROM t1
+)
+```
+
 ### [Exercise №69](https://www.sql-ex.ru/learn_exercises.php?LN=69)
 ```
 WITH t1 as (
