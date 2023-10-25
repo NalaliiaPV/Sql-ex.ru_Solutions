@@ -598,6 +598,28 @@ WHERE count IN (
 )
 ```
 
+### [Exercise №68](https://www.sql-ex.ru/learn_exercises.php?LN=68)
+```
+WITH t1 AS (
+SELECT route, COUNT(*) AS flight_count
+FROM (
+    SELECT
+        CASE WHEN town_from < town_to
+            THEN town_from || ' - ' || town_to
+            ELSE town_to  || ' - ' || town_from
+        END AS route
+    FROM Trip
+) AS routes
+GROUP BY route
+)
+
+SELECT COUNT(flight_count)
+FROM t1 
+WHERE flight_count IN (
+  SELECT MAX(flight_count) 
+  FROM t1
+```
+
 ### [Exercise №69](https://www.sql-ex.ru/learn_exercises.php?LN=69)
 ```
 WITH t1 as (
