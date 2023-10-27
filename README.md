@@ -647,6 +647,16 @@ HAVING COUNT(c.country) >= 3
 --без DISTINCT не проходит тест ан проверочной базе
 ```
 
+### [Exercise №71](https://www.sql-ex.ru/learn_exercises.php?LN=71)
+```
+SELECT p.maker
+FROM Product AS p
+LEFT JOIN PC ON p.model = PC.model
+WHERE type = 'PC'
+GROUP BY p.maker
+HAVING MAX(COALESCE(PC.model, 'A')) <> 'A'
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
