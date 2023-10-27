@@ -636,6 +636,17 @@ FROM (SELECT point, date, sum(inc) as inc FROM t1 GROUP BY point, date) as t3
 ORDER BY point, date
 ```
 
+### [Exercise №70](https://www.sql-ex.ru/learn_exercises.php?LN=70)
+```
+SELECT DISTINCT o.battle
+FROM Outcomes AS o
+LEFT JOIN Ships AS s ON o.ship = s.name
+LEFT JOIN Classes AS c ON coalesce(s.class, o.ship) = c.class
+GROUP BY o.battle, c.country
+HAVING COUNT(c.country) >= 3
+--без DISTINCT не проходит тест ан проверочной базе
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
