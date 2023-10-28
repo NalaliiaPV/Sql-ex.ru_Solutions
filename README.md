@@ -657,6 +657,28 @@ GROUP BY p.maker
 HAVING MAX(COALESCE(PC.model, 'A')) <> 'A'
 ```
 
+### [Exercise №72](https://www.sql-ex.ru/learn_exercises.php?LN=72)
+```
+WITH t1 AS (
+  SELECT 
+    pt.id_psg,
+    COUNT(*) AS cnt, -- количество полетов на пассажира
+    MAX(COUNT(*)) OVER () AS mx -- максимум
+  FROM pass_in_trip AS pt
+  LEFT JOIN trip t ON t.trip_no = pt.trip_no
+  GROUP BY pt.id_psg
+  HAVING MAX(id_comp) = MIN(id_comp) -- хитрый способ определить, что летал только одной компанией
+)
+
+SELECT (
+  SELECT name 
+  FROM passenger AS p 
+  WHERE p.id_psg = t1.id_psg
+) AS name, cnt
+FROM t1
+WHERE cnt = mx; -- выбираем только тех пассажиров, кто налетал максимум
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
