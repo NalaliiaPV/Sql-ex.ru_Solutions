@@ -679,6 +679,23 @@ FROM t1
 WHERE cnt = mx; -- выбираем только тех пассажиров, кто налетал максимум
 ```
 
+### [Exercise №73](https://www.sql-ex.ru/learn_exercises.php?LN=73)
+```
+WITH t1 AS (
+  SELECT o.battle, c.country
+  FROM Outcomes AS o
+  LEFT JOIN Ships AS s ON o.ship = s.name
+  LEFT JOIN Classes AS c ON COALESCE(s.class, o.ship) = c.class
+  ) --притянули страну к кораблям в битвах; если корабля нет в Ships, то класс определили по его имени
+
+SELECT DISTINCT Classes.country, Battles.name
+FROM Classes 
+CROSS JOIN Battles 
+EXCEPT 
+SELECT country, battle 
+FROM t1
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
