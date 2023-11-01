@@ -696,6 +696,31 @@ SELECT country, battle
 FROM t1
 ```
 
+### [Exercise №74 - variant 1](https://www.sql-ex.ru/learn_exercises.php?LN=74)
+```
+SELECT country, class
+FROM Classes
+WHERE country = 'Russia' 
+--если строки с Russia есть, то они выведутся, а если нет, то будет пустое множество
+UNION ALL
+SELECT country, class
+FROM Classes
+WHERE 'Russia' NOT IN (SELECT DISTINCT country FROM Classes) 
+--если 'Russia' найдено в таблице, то условие не соблюдено, и выведется пустое множество, а если не найдено, то выведется вся таблица
+```
+
+### [Exercise №74 - variant 2](https://www.sql-ex.ru/learn_exercises.php?LN=74)
+```
+SELECT country, class
+FROM classes, (
+    SELECT COUNT(country) AS count_Russia
+    FROM classes
+    WHERE country = 'Russia'
+  ) AS t1
+WHERE count_Russia= 0 OR --если строк с Russia нет, то выведутся все строки
+     (count_Russia>  0 AND country = 'Russia') --если строки с Russia есть, то выведутся только строки с Russia
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
