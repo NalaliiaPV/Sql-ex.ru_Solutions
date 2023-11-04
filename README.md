@@ -738,6 +738,35 @@ HAVING MAX(Laptop.price) IS NOT NULL
     OR MAX(Printer.price) IS NOT NULL
 ```
 
+### [Exercise №76](https://www.sql-ex.ru/learn_exercises.php?LN=76)
+```
+WITH mins AS (
+  SELECT trip_no, 
+         CASE WHEN time_in < time_out  
+              THEN extract(epoch FROM cast(time_in AS timestamp) - cast(time_out  AS timestamp))/60 + 1440
+              ELSE extract(epoch FROM cast(time_in AS timestamp) - cast(time_out  AS timestamp))/60
+         END AS min
+  FROM Trip
+  ),
+
+place AS (
+  SELECT trip_no, p.ID_psg, Passenger.name,
+         ROW_NUMBER() OVER(PARTITION BY p.ID_psg, place) AS place_count
+  FROM Pass_in_trip AS p
+  JOIN Passenger ON Passenger.ID_psg = p.ID_psg 
+  )
+
+SELECT name, SUM(min)
+FROM place 
+JOIN mins ON mins.trip_no = place.trip_no 
+WHERE ID_psg IN (SELECT ID_psg
+                FROM place 
+                GROUP BY ID_psg
+                HAVING MAX(place_count) = 1
+                )
+GROUP BY id_psg, name
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
