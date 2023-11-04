@@ -721,6 +721,23 @@ WHERE count_Russia= 0 OR --если строк с Russia нет, то вывед
      (count_Russia>  0 AND country = 'Russia') --если строки с Russia есть, то выведутся только строки с Russia
 ```
 
+### [Exercise №75](https://www.sql-ex.ru/learn_exercises.php?LN=75)
+```
+SELECT 
+  Product.maker, 
+  MAX(Laptop.price) AS max_laptop_price, 
+  MAX(PC.price) AS max_pc_price,
+  MAX(Printer.price) AS max_printer_price
+FROM Product
+LEFT JOIN PC ON PC.model = Product.model 
+LEFT JOIN Laptop ON Laptop.model = Product.model 
+LEFT JOIN Printer ON Printer.model = Product.model 
+GROUP BY Product.maker
+HAVING MAX(Laptop.price) IS NOT NULL
+    OR MAX(PC.price) IS NOT NULL
+    OR MAX(Printer.price) IS NOT NULL
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
