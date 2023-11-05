@@ -776,6 +776,30 @@ SELECT
 FROM Battles
 ```
 
+### [Exercise №79](https://www.sql-ex.ru/learn_exercises.php?LN=79)
+```
+WITH t_mins AS (
+  SELECT trip_no, time_out, time_in,
+         CASE WHEN time_out < time_in 
+         THEN extract(epoch from time_in - time_out) / 60
+         ELSE 24 * 60 - extract(epoch from time_out - time_in) / 60
+         END AS plane_time          
+  FROM Trip
+  ), --минуты в полете для каждого рейса
+
+p_mins AS (
+  SELECT id_psg, sum(plane_time) as sum_mins
+  FROM Pass_in_trip 
+  JOIN t_mins USING(trip_no)
+  GROUP BY id_psg
+  ) --минуты в полете для каждого id_psg
+
+SELECT name, sum_mins
+FROM p_mins 
+JOIN Passenger USING(id_psg)
+WHERE sum_mins IN (SELECT MAX(sum_mins) FROM p_mins)
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
