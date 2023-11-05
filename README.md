@@ -767,6 +767,15 @@ WHERE ID_psg IN (SELECT ID_psg
 GROUP BY id_psg, name
 ```
 
+### [Exercise №78](https://www.sql-ex.ru/learn_exercises.php?LN=78)
+```
+SELECT 
+  name, 
+  (date_trunc('month', date))::date as first_day,
+  (date_trunc('month', date) + interval '1 month' - interval '1 day')::date AS end_day 
+FROM Battles
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
