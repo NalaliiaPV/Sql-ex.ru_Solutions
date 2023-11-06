@@ -800,6 +800,24 @@ JOIN Passenger USING(id_psg)
 WHERE sum_mins IN (SELECT MAX(sum_mins) FROM p_mins)
 ```
 
+### [Exercise №80](https://www.sql-ex.ru/learn_exercises.php?LN=80)
+```
+WITH t1 AS (
+  SELECT 
+    maker, model, type,
+    CASE WHEN model IN (SELECT model FROM PC) THEN 1 ELSE 0
+         END AS check1
+  FROM Product
+  )
+
+SELECT maker
+FROM Product
+EXCEPT
+SELECT maker
+FROM t1 
+WHERE type = 'PC' AND check1 = 0
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
