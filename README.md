@@ -818,6 +818,39 @@ FROM t1
 WHERE type = 'PC' AND check1 = 0
 ```
 
+### [Exercise №81, variant 1](https://www.sql-ex.ru/learn_exercises.php?LN=81)
+```
+WITH t1 AS (
+  SELECT
+    CAST(DATE_TRUNC('MONTH', date) AS DATE) AS month,
+    SUM(out) AS sum_out
+  FROM Outcome
+  GROUP BY month
+  )
+
+SELECT *
+FROM Outcome 
+WHERE CAST(DATE_TRUNC('MONTH', date) AS DATE) IN (
+  SELECT month
+  FROM t1
+  WHERE sum_out = (SELECT MAX(sum_out) FROM t1)
+  )
+```
+
+### [Exercise №81, variant 2](https://www.sql-ex.ru/learn_exercises.php?LN=81)
+```
+WITH t1 AS (
+  SELECT
+    code, point, date, out,
+    SUM(out) OVER(PARTITION BY CAST(DATE_TRUNC('MONTH', date) AS DATE)) AS sum_out
+  FROM outcome
+  )
+
+SELECT code, point, date, out 
+FROM t1
+WHERE sum_out = (SELECT MAX(sum_out) FROM t1)
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
