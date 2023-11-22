@@ -876,6 +876,21 @@ WHERE CASE WHEN c.numGuns      = 8       THEN 1 ELSE 0 END
     + CASE WHEN c.country      = 'USA'   THEN 1 ELSE 0 END >= 4
 ```
 
+### [Exercise №84](https://www.sql-ex.ru/learn_exercises.php?LN=84)
+```
+SELECT 
+  c.name,
+  SUM(CASE WHEN EXTRACT(DAY FROM date) <=10 THEN 1 ELSE 0 END) AS dec_1,
+  SUM(CASE WHEN EXTRACT(DAY FROM date) >10 AND EXTRACT(DAY FROM date) <=20 THEN 1 ELSE 0 END) AS dec_2,
+  SUM(CASE WHEN EXTRACT(DAY FROM date) >20 THEN 1 ELSE 0 END) AS dec_3
+FROM Pass_in_trip p
+JOIN Trip t ON p.trip_no = t.trip_no
+JOIN Company c ON t.ID_comp = c.ID_comp
+WHERE EXTRACT(MONTH FROM date) = 4
+  AND EXTRACT(YEAR FROM date) = 2003
+GROUP BY c.name
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
