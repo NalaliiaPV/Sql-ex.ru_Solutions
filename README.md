@@ -851,6 +851,17 @@ FROM t1
 WHERE sum_out = (SELECT MAX(sum_out) FROM t1)
 ```
 
+### [Exercise №82](https://www.sql-ex.ru/learn_exercises.php?LN=82)
+```
+SELECT
+  code,
+  AVG(price) OVER (ORDER BY code
+                   ROWS BETWEEN CURRENT ROW
+                            AND 5 FOLLOWING) AS avg_prc
+FROM PC
+LIMIT (SELECT COUNT(*)-5 FROM PC)
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
