@@ -862,6 +862,20 @@ FROM PC
 LIMIT (SELECT COUNT(*)-5 FROM PC)
 ```
 
+### [Exercise №83](https://www.sql-ex.ru/learn_exercises.php?LN=83)
+```
+SELECT s.name
+FROM Classes c 
+INNER JOIN Ships s ON c.class = s.class
+WHERE CASE WHEN c.numGuns      = 8       THEN 1 ELSE 0 END
+    + CASE WHEN c.bore         = 15      THEN 1 ELSE 0 END
+    + CASE WHEN c.displacement = 32000   THEN 1 ELSE 0 END
+    + CASE WHEN c.type         = 'bb'    THEN 1 ELSE 0 END
+    + CASE WHEN s.launched     = 1915    THEN 1 ELSE 0 END
+    + CASE WHEN c.class        = 'Kongo' THEN 1 ELSE 0 END
+    + CASE WHEN c.country      = 'USA'   THEN 1 ELSE 0 END >= 4
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
