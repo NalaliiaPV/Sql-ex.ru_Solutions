@@ -891,6 +891,24 @@ WHERE EXTRACT(MONTH FROM date) = 4
 GROUP BY c.name
 ```
 
+### [Exercise №85](https://www.sql-ex.ru/learn_exercises.php?LN=85)
+```
+WITH t1 AS (
+  SELECT 
+    maker, model, type,
+    IIF(type = 'PC',1,0) AS 'PC',
+    IIF(type = 'Laptop',1,0) AS 'Laptop',
+    IIF(type = 'Printer',1,0) AS 'Printer'
+  FROM Product
+  )
+
+SELECT maker
+FROM t1
+GROUP BY maker
+HAVING (SUM(Printer) > 0 AND SUM(PC) = 0 AND SUM(Laptop) = 0)
+    OR (SUM(Printer) = 0 AND SUM(PC) > 2 AND SUM(Laptop) = 0)
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
