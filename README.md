@@ -909,6 +909,16 @@ HAVING (SUM(Printer) > 0 AND SUM(PC) = 0 AND SUM(Laptop) = 0)
     OR (SUM(Printer) = 0 AND SUM(PC) > 2 AND SUM(Laptop) = 0)
 ```
 
+### [Exercise №86](https://www.sql-ex.ru/learn_exercises.php?LN=86)
+```
+SELECT maker, STRING_AGG(type, '/') WITHIN GROUP (ORDER BY type)
+FROM (SELECT maker, type 
+      FROM Product 
+      GROUP BY maker, type
+      ) as A
+GROUP BY maker
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
