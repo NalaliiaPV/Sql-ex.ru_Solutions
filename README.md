@@ -919,6 +919,22 @@ FROM (SELECT maker, type
 GROUP BY maker
 ```
 
+### [Exercise №90](https://www.sql-ex.ru/learn_exercises.php?LN=90)
+```
+WITH t1 AS (
+  SELECT 
+    * , 
+    ROW_NUMBER() OVER(ORDER BY model) AS rn1, 
+    ROW_NUMBER() OVER(ORDER BY model DESC) AS rn2
+  FROM Product
+  )
+
+SELECT maker, model, type 
+FROM t1
+WHERE rn1 NOT IN (1,2,3)
+  AND rn2 NOT IN (1,2,3)
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
