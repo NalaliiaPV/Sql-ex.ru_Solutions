@@ -935,6 +935,30 @@ WHERE rn1 NOT IN (1,2,3)
   AND rn2 NOT IN (1,2,3)
 ```
 
+### [Exercise №93](https://www.sql-ex.ru/learn_exercises.php?LN=93)
+```
+WITH t1 AS (
+  SELECT 
+    name, trip_no,
+    CASE WHEN DATEDIFF(mi, time_out, time_in) > 0 
+         THEN DATEDIFF(mi, time_out, time_in)
+         ELSE DATEDIFF(mi, time_out, time_in) + 24*60
+         END dur
+  FROM Trip AS t
+  LEFT JOIN Company AS c ON c.ID_comp = t.ID_comp
+  ),
+
+t2 AS (
+  SELECT DISTINCT trip_no, date
+  FROM Pass_in_trip
+  )
+
+SELECT t1.name, SUM(t1.dur)
+FROM t2
+LEFT JOIN t1 ON t1.trip_no = t2.trip_no
+GROUP BY t1.name
+```
+
 ### [Exercise №100](https://www.sql-ex.ru/learn_exercises.php?LN=100)
 ```
 WITH i as (
